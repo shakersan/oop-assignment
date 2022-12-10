@@ -1,0 +1,246 @@
+#include <iostream>
+using namespace std;
+// i created class called linkedlist.
+class linkedlist{
+// first attribute represents "nodes".
+    struct Node{
+        int data;
+        Node* next;
+    };
+/* i created it because i will use it 
+more then one so instead of creating 
+alot of pointers i created one and just
+change thing that points to. */
+    Node* newnode;
+// to know the start of the list.      
+    Node* head = NULL; 
+// to make me move between nodes. 
+    Node* temp = NULL;
+public:
+/* instead of creating function this
+variable will do the same thing. */
+    int counter = 0;
+/* function i will use it later to check
+if the list is empty or not.*/    
+    bool isempty(){     
+        return (head == NULL);
+    }
+/* function to insert element (node with data)
+in the first of list.*/
+    void insertfirst(int element){
+        newnode = new Node;
+        newnode->data = element;
+// if the list is empty create one (easy one).
+        if (isempty())
+        {
+            newnode->next = NULL;
+            head = newnode;
+/* if the list already have data put the new 
+one at first by making its *next points to the 
+first one then let *head points to it. */  
+        }else{                         
+            newnode->next = head;
+            head = newnode;
+        }
+// increased by one because i added one.
+        counter++;
+    }
+/* function to insert element (node with data) 
+at the end of the list. */
+    void insertlast(int element){
+        newnode = new Node;
+        newnode->data = element;
+/* if the list is empty add the new one and make 
+it the first and the last one. */
+        if (isempty())
+        {
+            head = temp = newnode;
+            newnode->next = NULL;
+/* if the list is empty add the new one and make it
+the first and the last one. */
+        }else{
+            temp->next = newnode;
+            newnode->next = NULL;
+        }
+// same thing at in line 27.
+        counter++;
+    }
+/* function to insert element between the first and 
+the last (by location). */
+    void insertitem(int location, int element){
+/* condition to know that the location of the new node 
+between first and last.*/
+        if (location < 0 || location > counter)
+        {
+            cout << "Out of range!"<< endl;
+        }else{
+            newnode = new Node;
+            newnode->data = element;
+/* if we want to add node with location 0(0 is the first of our list)
+call the function insertfirst(). */
+            if (location == 0)
+            {
+                insertfirst(element);
+/* otherwise move to the node in the location (entered location - 1) 
+and make its *next points to the newnode
+then make the *next of the newnode points to the node that is after 
+this one (entered location - 1). */
+            }else{
+                Node* current = head;
+                for (int i = 1; i < location; i++)
+                {
+                    current = current->next;
+                    current->next = newnode;
+                    counter++;
+                }
+            }
+        }
+    }
+// function to delete the first element of the list.
+    void removefirst(){
+// i think this condition don't need to explain.
+        if (counter == 0)
+        {
+            cout << "There is nothing to delete!"<< endl;
+// if the list has only one element this element surely it is the first one.
+        }else if (counter == 1)
+        {
+// delete it.
+            delete head;
+            head = temp = NULL;
+// because i delete, decraese the counter by one.
+            counter--;
+// if the counter have more than one element.
+        }else{
+// before delete the first one let *head points to the second node.
+            Node* current = head;
+            head = head->next;
+// then delete it.
+            delete current;
+        }
+    }
+// function to delete the last element of the list.
+    void removelast(){
+        Node* current = head->next;
+        Node* previous = head;
+// the same thing in line 64.
+        if (counter == 0)
+        {
+            cout << "There is nothing to delete!"<< endl;
+// if there is one element in the list call the function removefirst().
+        }else if (counter == 1)
+        {
+            removefirst();
+// if there are many nodes in the list ??
+        }else{
+            Node* current = head;
+/* loop to reach the last node and before deleting it and
+save the address of the one that is before it by pointing it with *previous.*/
+            while (current != NULL && current != temp)
+            {
+                previous = current;
+                current = current->next;
+// delete it.
+                delete current;
+// make previous the last one.
+                previous->next = NULL;
+                temp = previous;
+// samething in line 71.
+                counter--;
+            }
+        }
+    }
+// function to delete an element between first and last.
+    void removeitem(int element){
+// the same thing in line 64.
+        if (isempty())
+        {
+            cout << "There is nothing to delete!"<< endl;
+        }
+/* created 2 pointers to points the wanted node and its previous one
+to make the previous points to the node that is after wanted node. */
+        Node *current, *previous; 
+        if (head->data == element)  
+        {
+// if the wanted element is the first one call the function removefirst().
+            removefirst();
+        }else
+        {
+/* otherwise loop to find the wanted list by letting the current points to a node
+and its previous points to the node that is before current. */
+            current = head->next; 
+            previous = head;
+            while (current != NULL && current->data != element)
+            {
+                previous = current;
+                current = current->next;
+            }
+// if we reached to the end of the node and didn't find the element we want.
+            if (current == NULL)
+            {
+// cout this.
+                cout << "The entered element is not in the list!" << endl;
+// if we found it ??
+            }else 
+            {
+// let previous of next  points to the current of next and delete current.
+                previous->next = current->next;
+// but if we found that wanted node is the last one ??
+                if (temp == current)
+                {
+/* here i should call the function removelast() but i found that doing it as
+a forward statement is easy
+so i did it without calling. */
+                    temp = previous;
+                }
+// after all of this delete current and decrease counter by 1.
+                delete current;
+                counter--;
+            }
+        } 
+    }
+// function to display all elements of the list (data section only).
+    void display(){
+        temp = head;
+// while temp(pointer i use to move between nodes) didn't reach the end of the list.
+        while (temp != NULL)
+        {
+// cout the data of each node you found.
+            cout << temp->data <<" ";
+// move to the next node.
+            temp = temp->next;
+        }
+    }
+// function to search for an element in the node.
+    bool search(int element){
+        temp = head;
+// same thing in line 135.
+        while (temp != NULL)
+        {
+/* condtion to return 1 if we found the element
+and return 0 if we didn't. */
+            return (temp->data == element); 
+            temp = temp->next;
+        }
+    }
+};
+int main(){
+    linkedlist list;
+    list.insertfirst(5);    //insert 5 at first
+    list.insertlast(15);    //insert 15 at last
+    list.insertitem(1,10);  //insert 10 between 5, 15
+    list.display();
+    cout << endl;
+    if (list.search(10))    //search for element 10 in the list
+    {
+        cout << "Element 10 is in list \n";
+    }else
+    {
+        cout << "Element 10 is not in the list \n";
+    }
+    list.removefirst();     //remove 5
+    list.removelast();      //remove 15
+    list.removeitem(10);    //remove 10
+    list.display();         //the list is empty there is no output;
+    return 0;
+}
