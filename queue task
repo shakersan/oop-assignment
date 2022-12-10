@@ -1,0 +1,101 @@
+#include <iostream>
+using namespace std;
+// i created class with the name queue implementation.
+class queue_implementation{
+// to make it easy i choose an array with the size 5.
+    #define n   5
+//  the array called queue.
+    int queue[n];
+/*front is the start of the array and there is other option
+to make it 0 but i prefer to start with 0 not 1.*/
+    int front = -1;
+// rear to know where in the array my elements stop.
+    int rear = -1;
+public:
+// variable instead of function.
+    int counter = 0;
+/* function to know is the array is empty or not
+by check if the begin and end == -1(initial value). */
+    bool isempty(){
+        return (front == rear == -1);
+    }
+/* function to add element at the end of array(queue)
+because i use rear to front not front to rear method. */
+    void enqueue(int element){
+// if the array (space i set) is full cannot add onother element.
+        if (rear == n-1)
+        {
+            cout << "Overload!" << endl;
+/* note: we know that the array is not dynamic i can solve this using vector
+or implementation with linkedlist but it is not our subject now. */
+// if the array is empty ??
+        }else if (isempty())
+        {
+// the element will be the first and the last one in this queue.
+            front = rear = 0;
+            queue[rear] = element;
+// counter increased by one because it is add.
+            counter++;
+// otherwise (there are elements in the array and array isn't full).
+        }else{
+            rear++;
+// add the element at the empty place after rear.
+            queue[rear] = element
+            counter++;
+        }
+    }
+/* dequeue function to remove element (The opposite of enqueue function).
+so i think that there is no thing to add. */
+    void dequeue(){
+        if (isempty())
+        {
+            cout << "Array is empty cannot dequeue anything! \n";
+        }else if (front == rear)
+        {
+// return variables to its initial values.
+            front = rear = -1;
+            counter--;
+        }else{
+            front++;
+            counter--;
+        }
+    }
+// peek function to display the first element of the queue.
+    void peek(){
+        if (isempty())
+        {
+            cout << "Array is empty cannot peek anything! \n";
+        }else
+        {
+            cout << queue[front];
+        }
+    }
+// display is a function to cout all elements in this queue.
+    void display(){
+        if (isempty())
+        {
+            cout << "There is nothing to display! \n";
+        }else{
+/* display from front to rear
+because the queue works by first in first out
+and here we add from rear so we will display from front. */
+            for (int i = front; i < rear+1; i++)
+            {
+                cout << queue[i] << " ";
+            }
+        }
+    }
+};
+int main(){
+    queue_implementation q;
+    q.enqueue(5);   //insert element 5
+    q.enqueue(10);  //insert element 10
+    q.enqueue(15);  //insert element 15
+    q.peek();       //display first element {front}
+    q.display();    //display all elements
+    q.dequeue();    //dequeue to delete elements
+    q.dequeue();
+    q.dequeue();
+    q.display();    //array is empty there is no output
+    return 0;
+}
